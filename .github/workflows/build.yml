@@ -1,0 +1,18 @@
+name: Build Windows exe
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo test --release
+      - run: cargo build --release
+      - run: .\target\release\TaskMgrRS.exe --selftest
+      - uses: actions/upload-artifact@v4
+        with:
+          name: TaskMgrRS
+          path: target/release/TaskMgrRS.exe
